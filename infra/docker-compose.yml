@@ -1,0 +1,19 @@
+﻿services:
+  api:
+    build:
+      context: ../src/Metrics
+      dockerfile: Dockerfile 
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      
+  
+  k6:
+    image: grafana/k6
+    container_name: k6-load-test
+    depends_on:
+      - api
+    volumes:
+      - ./k6:/scripts
+    command: run /scripts/test.js
